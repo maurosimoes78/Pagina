@@ -15,6 +15,7 @@ export class EmailService {
   private readonly EMAILJS_SERVICE_ID = 'service_9lsbews'; // Substitua pelo ID do seu serviço
   private readonly EMAILJS_TEMPLATE_ID = 'template_sr2kkfn'; // Substitua pelo ID do seu template
   private readonly EMAILJS_SAC_TEMPLATE_ID = 'template_zzx04oc'; // Substitua pelo ID do seu template
+  private readonly EMAILJS_RECUPERACAO_SENHA_TEMPLATE_ID = 'template_sr2kkfn'; // Use o mesmo template ou crie um específico
   
   constructor() {
     // Inicializar EmailJS
@@ -172,6 +173,55 @@ export class EmailService {
       return {
         success: false,
         message: 'Erro ao enviar candidatura. Verifique sua conexão e tente novamente.'
+      };
+    }
+  }
+
+  /**
+   * Envia a senha de recuperação por email usando EmailJS
+   * @param recoveryData Dados para recuperação de senha
+   * @returns Promise com o resultado do envio
+   */
+  async enviarSenhaRecuperacao(recoveryData: {
+    email: string;
+    nome: string;
+    senha: string;
+  }): Promise<{ success: boolean; message: string }> {
+    try {
+      // Preparar dados do template
+      const templateParams = {
+        to_email: recoveryData.email,
+        from_name: 'Sistema Akani',
+        from_email: 'noreply@s3smart.com.br',
+        nome: recoveryData.nome,
+        senha: recoveryData.senha,
+        reply_to: 'sac@s3smart.com.br',
+        subject: 'Recuperação de Senha - Akani'
+      };
+
+      // Enviar email usando EmailJS
+      const response = await emailjs.send(
+        this.EMAILJS_SERVICE_ID,
+        this.EMAILJS_RECUPERACAO_SENHA_TEMPLATE_ID,
+        templateParams
+      );
+
+      if (response.status === 200) {
+        return {
+          success: true,
+          message: 'Senha enviada para seu email com sucesso!'
+        };
+      } else {
+        return {
+          success: false,
+          message: 'Erro ao enviar email. Tente novamente.'
+        };
+      }
+    } catch (error: any) {
+      console.error('Erro ao enviar email de recuperação:', error);
+      return {
+        success: false,
+        message: error.text || 'Erro ao enviar email. Verifique sua conexão e tente novamente.'
       };
     }
   }

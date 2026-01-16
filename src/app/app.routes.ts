@@ -27,6 +27,7 @@ import { AkaniAutomacaoComponent } from './pages/exibicao/akani-automacao/akani-
 import { GerenciamentoConteudoComponent } from './pages/gerenciamento-conteudo/gerenciamento-conteudo.component';
 import { AkaniMohenduComponent } from './pages/gerenciamento-conteudo/akani-mam/akani-mam.component';
 import { AkaniPytaComponent } from './pages/gerenciamento-conteudo/akani-arquivo/akani-arquivo.component';
+import { UsuariosComponent } from './pages/admin/usuarios/usuarios.component';
 
 export const routes: Routes = [
   // Rota inicial
@@ -56,12 +57,15 @@ export const routes: Routes = [
   { path: 'suporte/orientacoes-uso', component: OrientacoesUsoComponent },
   { path: 'suporte/informacoes-conta', component: InformacoesContaComponent },
   
-  // Rotas Institucionais
-  { path: 'institucional/sobre', component: SobreComponent },
-  { path: 'institucional/missao', component: MissaoComponent },
-  { path: 'institucional/historia', component: HistoriaComponent },
-  { path: 'institucional/carreiras', component: CarreirasComponent },
-  { path: 'institucional/candidatura', component: CandidaturaComponent },
-  { path: 'institucional/privacidade', component: PrivacidadeComponent },
-  { path: 'institucional/termos', component: TermosComponent }
-];
+         // Rotas Institucionais
+         { path: 'institucional/sobre', component: SobreComponent },
+         { path: 'institucional/missao', component: MissaoComponent },
+         { path: 'institucional/historia', component: HistoriaComponent },
+         { path: 'institucional/carreiras', component: CarreirasComponent },
+         { path: 'institucional/candidatura', component: CandidaturaComponent },
+         { path: 'institucional/privacidade', component: PrivacidadeComponent },
+         { path: 'institucional/termos', component: TermosComponent },
+         
+         // Rotas Administrativas
+         { path: 'admin/usuarios', component: UsuariosComponent }
+       ];

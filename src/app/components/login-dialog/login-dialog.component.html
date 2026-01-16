@@ -1,0 +1,355 @@
+<div class="dialog-overlay" (click)="onOverlayClick($event)">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <h2>{{ showSignupForm ? 'Criar Conta' : 'Login' }}</h2>
+      <button class="close-button" (click)="closeDialog()" aria-label="Fechar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="dialog-content">
+      @if (showSignupForm) {
+        <!-- Formulário de Cadastro -->
+        <form (ngSubmit)="onSignup()" class="login-form">
+          <div class="form-group">
+            <label for="signup-name">Nome Completo <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="signup-name" 
+              name="name" 
+              [(ngModel)]="name" 
+              required
+              class="form-input"
+              placeholder="Seu nome completo"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email <span class="required">*</span></label>
+            <input 
+              type="email" 
+              id="signup-email" 
+              name="email" 
+              [(ngModel)]="email" 
+              required
+              class="form-input"
+              placeholder="seu.email@exemplo.com"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Senha <span class="required">*</span></label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="signup-password" 
+                name="password" 
+                [(ngModel)]="password" 
+                required
+                class="form-input"
+                placeholder="Mínimo 6 caracteres"
+                [disabled]="isLoading"
+              />
+              <button 
+                type="button" 
+                class="password-toggle-button"
+                (click)="showPassword = !showPassword"
+                [disabled]="isLoading"
+                [attr.aria-label]="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              >
+                @if (showPassword) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                }
+              </button>
+            </div>
+            <small class="form-hint">A senha deve ter no mínimo 6 caracteres</small>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-cpf">CPF</label>
+            <input 
+              type="text" 
+              id="signup-cpf" 
+              name="cpf" 
+              [(ngModel)]="cpf" 
+              class="form-input"
+              placeholder="000.000.000-00"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-telefone">Telefone</label>
+            <input 
+              type="tel" 
+              id="signup-telefone" 
+              name="telefone" 
+              [(ngModel)]="telefone" 
+              class="form-input"
+              placeholder="(00) 00000-0000"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-empresa">Empresa</label>
+            <input 
+              type="text" 
+              id="signup-empresa" 
+              name="empresa" 
+              [(ngModel)]="empresa" 
+              class="form-input"
+              placeholder="Nome da empresa"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-endereco">Endereço</label>
+            <input 
+              type="text" 
+              id="signup-endereco" 
+              name="endereco" 
+              [(ngModel)]="endereco" 
+              class="form-input"
+              placeholder="Rua, número"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-bairro">Bairro</label>
+            <input 
+              type="text" 
+              id="signup-bairro" 
+              name="bairro" 
+              [(ngModel)]="bairro" 
+              class="form-input"
+              placeholder="Bairro"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-cidade">Cidade</label>
+            <input 
+              type="text" 
+              id="signup-cidade" 
+              name="cidade" 
+              [(ngModel)]="cidade" 
+              class="form-input"
+              placeholder="Cidade"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-estado">Estado</label>
+            <input 
+              type="text" 
+              id="signup-estado" 
+              name="estado" 
+              [(ngModel)]="estado" 
+              class="form-input"
+              placeholder="Estado"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-pais">País</label>
+            <select 
+              id="signup-pais" 
+              name="pais" 
+              [(ngModel)]="pais" 
+              class="form-input"
+              [disabled]="isLoading"
+            >
+              <option value="">Selecione um país</option>
+              @for (country of countries; track country) {
+                <option [value]="country">{{ country }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-telefone-comercial">Telefone Comercial</label>
+            <input 
+              type="tel" 
+              id="signup-telefone-comercial" 
+              name="telefoneComercial" 
+              [(ngModel)]="telefoneComercial" 
+              class="form-input"
+              placeholder="(00) 0000-0000"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-cnpj">CNPJ</label>
+            <input 
+              type="text" 
+              id="signup-cnpj" 
+              name="cnpj" 
+              [(ngModel)]="cnpj" 
+              class="form-input"
+              placeholder="00.000.000/0000-00"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          @if (errorMessage) {
+            <div class="error-message">
+              {{ errorMessage }}
+            </div>
+          }
+
+          @if (successMessage) {
+            <div class="success-message">
+              {{ successMessage }}
+            </div>
+          }
+
+          <div class="form-actions">
+            <button type="submit" class="submit-button" [disabled]="isLoading">
+              @if (isLoading) {
+                <span>Criando conta...</span>
+              } @else {
+                <span>Criar Conta</span>
+              }
+            </button>
+            <button type="button" class="cancel-button" (click)="goBackToLogin()" [disabled]="isLoading">Voltar ao Login</button>
+          </div>
+        </form>
+      } @else {
+        <!-- Formulário de Login -->
+        <form (ngSubmit)="onSubmit()" class="login-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              [(ngModel)]="email" 
+              required
+              class="form-input"
+              placeholder="seu.email@exemplo.com"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              [(ngModel)]="password" 
+              required
+              class="form-input"
+              placeholder="Digite sua senha"
+              [disabled]="isLoading"
+            />
+            <a (click)="openForgotPasswordDialog()" class="forgot-password-link">Esqueci minha senha</a>
+          </div>
+
+          @if (errorMessage) {
+            <div class="error-message">
+              {{ errorMessage }}
+            </div>
+          }
+
+          @if (successMessage) {
+            <div class="success-message">
+              {{ successMessage }}
+            </div>
+          }
+
+          <div class="form-actions">
+            <button type="submit" class="submit-button" [disabled]="isLoading">
+              @if (isLoading) {
+                <span>Entrando...</span>
+              } @else {
+                <span>Entrar</span>
+              }
+            </button>
+            <button type="button" class="cancel-button" (click)="closeDialog()" [disabled]="isLoading">Cancelar</button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Dialog de Recuperação de Senha -->
+@if (showForgotPasswordDialog) {
+  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <h2>Recuperar Senha</h2>
+        <button class="close-button" (click)="closeForgotPasswordDialog()" aria-label="Fechar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="dialog-content">
+        <form (ngSubmit)="onForgotPasswordSubmit()" class="login-form">
+          <p class="forgot-password-info">Digite seu email cadastrado e enviaremos sua senha por email.</p>
+          
+          <div class="form-group">
+            <label for="forgot-email">Email <span class="required">*</span></label>
+            <input 
+              type="email" 
+              id="forgot-email" 
+              name="forgotEmail" 
+              [(ngModel)]="forgotPasswordEmail" 
+              required
+              class="form-input"
+              placeholder="seu.email@exemplo.com"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          @if (errorMessage) {
+            <div class="error-message">
+              {{ errorMessage }}
+            </div>
+          }
+
+          @if (successMessage) {
+            <div class="success-message">
+              {{ successMessage }}
+            </div>
+          }
+
+          <div class="form-actions">
+            <button type="submit" class="submit-button" [disabled]="isLoading">
+              @if (isLoading) {
+                <span>Enviando...</span>
+              } @else {
+                <span>Enviar</span>
+              }
+            </button>
+            <button type="button" class="cancel-button" (click)="closeForgotPasswordDialog()" [disabled]="isLoading">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

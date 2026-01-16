@@ -16,8 +16,9 @@
   margin: 0 auto;
   padding: 1rem 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  position: relative;
 }
 
 .logo-container {
@@ -43,10 +44,27 @@
   object-fit: contain;
 }
 
+.welcome-message {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 1rem;
+  color: #333;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.welcome-message span {
+  color: #007bff;
+}
+
 .menu-container {
   display: flex;
   align-items: center;
   position: relative;
+  flex-shrink: 0; /* Impede que o menu seja comprimido */
+  margin-left: auto; /* Empurra o menu para a direita */
 }
 
 .menu-button {
@@ -177,6 +195,10 @@
 @media (max-width: 768px) {
   .header-container {
     padding: 1rem;
+  }
+  
+  .welcome-message {
+    display: none; /* Ocultar mensagem de boas-vindas em telas pequenas */
   }
   
   .logo {

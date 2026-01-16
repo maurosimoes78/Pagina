@@ -1,0 +1,337 @@
+<div class="page-container">
+  <div class="content-header">
+    <h1>Gerenciamento de Usuários</h1>
+    <button class="add-button" (click)="openAddDialog()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      <span>Adicionar Usuário</span>
+    </button>
+  </div>
+
+  @if (successMessage) {
+    <div class="success-message">
+      {{ successMessage }}
+    </div>
+  }
+
+  <div class="users-table-container">
+    @if (users.length === 0) {
+      <div class="empty-state">
+        <p>Nenhum usuário cadastrado.</p>
+        <p>Clique em "Adicionar Usuário" para começar.</p>
+      </div>
+    } @else {
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Perfil</th>
+            <th>Data de Criação</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user.id) {
+            <tr>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="role-badge" [class.role-admin]="user.role === 'admin'">{{ user.role || 'user' }}</span>
+              </td>
+              <td>{{ user.createdAt | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="edit-button" (click)="openEditDialog(user)" title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button class="delete-button" (click)="openDeleteDialog(user)" title="Excluir">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
+
+<!-- Dialog de Adicionar Usuário -->
+@if (isAddDialogOpen) {
+  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <h2>Adicionar Usuário</h2>
+        <button class="close-button" (click)="closeDialogs()" aria-label="Fechar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-content">
+        <form (ngSubmit)="addUser()" class="user-form">
+          <div class="form-group">
+            <label for="add-name">Nome <span class="required">*</span></label>
+            <input type="text" id="add-name" [(ngModel)]="formData.name" name="name" required class="form-input" placeholder="Nome completo">
+          </div>
+          <div class="form-group">
+            <label for="add-email">Email <span class="required">*</span></label>
+            <input type="email" id="add-email" [(ngModel)]="formData.email" name="email" required class="form-input" placeholder="usuario@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label for="add-password">Senha <span class="required">*</span></label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="add-password" 
+                [(ngModel)]="formData.password" 
+                name="password" 
+                required 
+                class="form-input" 
+                placeholder="Mínimo 6 caracteres"
+              />
+              <button 
+                type="button" 
+                class="password-toggle-button"
+                (click)="showPassword = !showPassword"
+                [attr.aria-label]="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              >
+                @if (showPassword) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="add-role">Perfil</label>
+            <select id="add-role" [(ngModel)]="formData.role" name="role" class="form-input">
+              <option value="user">Usuário</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="add-cpf">CPF</label>
+            <input type="text" id="add-cpf" [(ngModel)]="formData.cpf" name="cpf" class="form-input" placeholder="000.000.000-00">
+          </div>
+          <div class="form-group">
+            <label for="add-telefone">Telefone</label>
+            <input type="tel" id="add-telefone" [(ngModel)]="formData.telefone" name="telefone" class="form-input" placeholder="(00) 00000-0000">
+          </div>
+          <div class="form-group">
+            <label for="add-empresa">Empresa</label>
+            <input type="text" id="add-empresa" [(ngModel)]="formData.empresa" name="empresa" class="form-input" placeholder="Nome da empresa">
+          </div>
+          <div class="form-group">
+            <label for="add-endereco">Endereço</label>
+            <input type="text" id="add-endereco" [(ngModel)]="formData.endereco" name="endereco" class="form-input" placeholder="Rua, número">
+          </div>
+          <div class="form-group">
+            <label for="add-bairro">Bairro</label>
+            <input type="text" id="add-bairro" [(ngModel)]="formData.bairro" name="bairro" class="form-input" placeholder="Bairro">
+          </div>
+          <div class="form-group">
+            <label for="add-cidade">Cidade</label>
+            <input type="text" id="add-cidade" [(ngModel)]="formData.cidade" name="cidade" class="form-input" placeholder="Cidade">
+          </div>
+          <div class="form-group">
+            <label for="add-estado">Estado</label>
+            <input type="text" id="add-estado" [(ngModel)]="formData.estado" name="estado" class="form-input" placeholder="Estado">
+          </div>
+          <div class="form-group">
+            <label for="add-pais">País</label>
+            <select id="add-pais" [(ngModel)]="formData.pais" name="pais" class="form-input">
+              <option value="">Selecione um país</option>
+              @for (country of countries; track country) {
+                <option [value]="country">{{ country }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="add-telefone-comercial">Telefone Comercial</label>
+            <input type="tel" id="add-telefone-comercial" [(ngModel)]="formData.telefoneComercial" name="telefoneComercial" class="form-input" placeholder="(00) 0000-0000">
+          </div>
+          <div class="form-group">
+            <label for="add-cnpj">CNPJ</label>
+            <input type="text" id="add-cnpj" [(ngModel)]="formData.cnpj" name="cnpj" class="form-input" placeholder="00.000.000/0000-00">
+          </div>
+          @if (errorMessage) {
+            <div class="error-message">{{ errorMessage }}</div>
+          }
+          <div class="form-actions">
+            <button type="submit" class="submit-button">Adicionar</button>
+            <button type="button" class="cancel-button" (click)="closeDialogs()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Dialog de Editar Usuário -->
+@if (isEditDialogOpen && selectedUser) {
+  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <h2>Editar Usuário</h2>
+        <button class="close-button" (click)="closeDialogs()" aria-label="Fechar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-content">
+        <form (ngSubmit)="updateUser()" class="user-form">
+          <div class="form-group">
+            <label for="edit-name">Nome <span class="required">*</span></label>
+            <input type="text" id="edit-name" [(ngModel)]="formData.name" name="name" required class="form-input" placeholder="Nome completo">
+          </div>
+          <div class="form-group">
+            <label for="edit-email">Email <span class="required">*</span></label>
+            <input type="email" id="edit-email" [(ngModel)]="formData.email" name="email" required class="form-input" placeholder="usuario@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label for="edit-password">Nova Senha</label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="edit-password" 
+                [(ngModel)]="formData.password" 
+                name="password" 
+                class="form-input" 
+                placeholder="Deixe em branco para manter a senha atual"
+              />
+              <button 
+                type="button" 
+                class="password-toggle-button"
+                (click)="showPassword = !showPassword"
+                [attr.aria-label]="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              >
+                @if (showPassword) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                }
+              </button>
+            </div>
+            <small class="form-hint">Deixe em branco para manter a senha atual</small>
+          </div>
+          <div class="form-group">
+            <label for="edit-role">Perfil</label>
+            <select id="edit-role" [(ngModel)]="formData.role" name="role" class="form-input">
+              <option value="user">Usuário</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-cpf">CPF</label>
+            <input type="text" id="edit-cpf" [(ngModel)]="formData.cpf" name="cpf" class="form-input" placeholder="000.000.000-00">
+          </div>
+          <div class="form-group">
+            <label for="edit-telefone">Telefone</label>
+            <input type="tel" id="edit-telefone" [(ngModel)]="formData.telefone" name="telefone" class="form-input" placeholder="(00) 00000-0000">
+          </div>
+          <div class="form-group">
+            <label for="edit-empresa">Empresa</label>
+            <input type="text" id="edit-empresa" [(ngModel)]="formData.empresa" name="empresa" class="form-input" placeholder="Nome da empresa">
+          </div>
+          <div class="form-group">
+            <label for="edit-endereco">Endereço</label>
+            <input type="text" id="edit-endereco" [(ngModel)]="formData.endereco" name="endereco" class="form-input" placeholder="Rua, número">
+          </div>
+          <div class="form-group">
+            <label for="edit-bairro">Bairro</label>
+            <input type="text" id="edit-bairro" [(ngModel)]="formData.bairro" name="bairro" class="form-input" placeholder="Bairro">
+          </div>
+          <div class="form-group">
+            <label for="edit-cidade">Cidade</label>
+            <input type="text" id="edit-cidade" [(ngModel)]="formData.cidade" name="cidade" class="form-input" placeholder="Cidade">
+          </div>
+          <div class="form-group">
+            <label for="edit-estado">Estado</label>
+            <input type="text" id="edit-estado" [(ngModel)]="formData.estado" name="estado" class="form-input" placeholder="Estado">
+          </div>
+          <div class="form-group">
+            <label for="edit-pais">País</label>
+            <select id="edit-pais" [(ngModel)]="formData.pais" name="pais" class="form-input">
+              <option value="">Selecione um país</option>
+              @for (country of countries; track country) {
+                <option [value]="country">{{ country }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-telefone-comercial">Telefone Comercial</label>
+            <input type="tel" id="edit-telefone-comercial" [(ngModel)]="formData.telefoneComercial" name="telefoneComercial" class="form-input" placeholder="(00) 0000-0000">
+          </div>
+          <div class="form-group">
+            <label for="edit-cnpj">CNPJ</label>
+            <input type="text" id="edit-cnpj" [(ngModel)]="formData.cnpj" name="cnpj" class="form-input" placeholder="00.000.000/0000-00">
+          </div>
+          @if (errorMessage) {
+            <div class="error-message">{{ errorMessage }}</div>
+          }
+          <div class="form-actions">
+            <button type="submit" class="submit-button">Salvar Alterações</button>
+            <button type="button" class="cancel-button" (click)="closeDialogs()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Dialog de Confirmar Exclusão -->
+@if (isDeleteDialogOpen && selectedUser) {
+  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <h2>Confirmar Exclusão</h2>
+        <button class="close-button" (click)="closeDialogs()" aria-label="Fechar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-content">
+        <p class="confirm-message">
+          Tem certeza que deseja excluir o usuário <strong>{{ selectedUser.name }}</strong> ({{ selectedUser.email }})?
+        </p>
+        <p class="confirm-warning">Esta ação não pode ser desfeita.</p>
+        @if (errorMessage) {
+          <div class="error-message">{{ errorMessage }}</div>
+        }
+        <div class="form-actions">
+          <button type="button" class="delete-confirm-button" (click)="deleteUser()">Excluir</button>
+          <button type="button" class="cancel-button" (click)="closeDialogs()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

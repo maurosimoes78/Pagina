@@ -5,6 +5,11 @@
         <img src="/akani-logo.png" alt="Logo" class="logo" />
       </a>
     </div>
+    @if (currentUser) {
+      <div class="welcome-message">
+        <span>Olá {{ currentUser.name }}, seja bem vindo!</span>
+      </div>
+    }
     <div class="menu-container">
       <button class="menu-button" (click)="toggleMenu()" aria-label="Menu" [attr.aria-expanded]="isMenuOpen">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -17,12 +22,37 @@
       @if (isMenuOpen) {
         <div class="menu-dropdown">
           <div class="menu-section">
+            <h3 class="menu-section-title">Akani</h3>
+            <ul class="menu-links">
+              <li>
+                <a routerLink="/" (click)="closeMenu()" class="menu-link">Home</a>
+              </li>
+              @if (currentUser) {
+                <li>
+                  <a (click)="logout()" class="menu-link">Logout</a>
+                </li>
+              } @else {
+                <li>
+                  <a (click)="openLoginDialog()" class="menu-link">Login</a>
+                </li>
+              }
+            </ul>
+          </div>
+          
+          <div class="menu-section">
             <h3 class="menu-section-title">Suporte</h3>
             <ul class="menu-links">
-              @for (link of supportLinks; track link.url) {
+              @for (link of supportLinksPublic; track link.url) {
                 <li>
                   <a [routerLink]="link.url" (click)="closeMenu()" class="menu-link">{{ link.label }}</a>
                 </li>
+              }
+              @if (currentUser) {
+                @for (link of supportLinksAuthenticated; track link.url) {
+                  <li>
+                    <a [routerLink]="link.url" (click)="closeMenu()" class="menu-link">{{ link.label }}</a>
+                  </li>
+                }
               }
             </ul>
           </div>
@@ -37,6 +67,17 @@
               }
             </ul>
           </div>
+          
+          @if (isAdmin()) {
+            <div class="menu-section">
+              <h3 class="menu-section-title">Administração</h3>
+              <ul class="menu-links">
+                <li>
+                  <a routerLink="/admin/usuarios" (click)="closeMenu()" class="menu-link">Usuarios</a>
+                </li>
+              </ul>
+            </div>
+          }
         </div>
       }
     </div>
@@ -44,5 +85,12 @@
   
   @if (isMenuOpen) {
     <div class="menu-overlay" (click)="closeMenu()"></div>
+  }
+  
+  @if (isLoginDialogOpen) {
+    <app-login-dialog 
+      (close)="closeLoginDialog()" 
+      (loginSuccess)="onLoginSuccess()">
+    </app-login-dialog>
   }
 </header>
