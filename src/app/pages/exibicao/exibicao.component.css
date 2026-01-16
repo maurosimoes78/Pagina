@@ -128,11 +128,11 @@
   }
 
   .panel-image {
-    flex: 0 0 150px;
+    flex: none;
+    width: 150px;
     height: 150px;
-    width: 100%;
-    max-width: 200px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0 auto 1rem auto;
   }
 
   .panel-content {

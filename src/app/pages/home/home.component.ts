@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     { 
       id: 1, 
       title: 'Exibição', 
-      description: 'Sistemas de playout profissionais para transmissão',
+      description: 'Sistemas profissionais de TOVA e automação para transmissão',
       image: '/assets/images/playout.png'
     },
     { 
@@ -72,8 +72,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   navigateToPanel(panelTitle: string) {
     if (panelTitle === 'Captura') {
-      this.router.navigate(['/captura']);
+      this.router.navigate(['/captura'], { skipLocationChange: true });
+    } else if (panelTitle === 'Exibição') {
+      this.router.navigate(['/exibicao'], { skipLocationChange: true });
+    } else if (panelTitle === 'Gerenciamento de Conteúdo') {
+      this.router.navigate(['/gerenciamento-conteudo'], { skipLocationChange: true });
     }
-    // Adicione outras navegações aqui conforme necessário
   }
 }

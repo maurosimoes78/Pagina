@@ -3,7 +3,7 @@
     <div class="carousel-container">
       <div class="carousel-track" [style.transform]="'translateX(-' + (currentIndex * 100) + '%)'">
         @for (panel of panels; track panel.id) {
-          <div class="carousel-panel" [class.active]="currentIndex === panel.id" [class.clickable]="panel.title === 'Captura'" (click)="panel.title === 'Captura' ? navigateToPanel(panel.title) : null">
+          <div class="carousel-panel" [class.active]="currentIndex === panel.id" [class.clickable]="panel.title === 'Captura' || panel.title === 'Exibição' || panel.title === 'Gerenciamento de Conteúdo'" (click)="navigateToPanel(panel.title)">
             <div class="panel-content">
               <div class="panel-image">
                 <img [src]="panel.image" [alt]="panel.title" />
