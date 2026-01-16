@@ -1,0 +1,42 @@
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.content h1 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.terms-section {
+  margin-top: 2rem;
+}
+
+.terms-item {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.terms-item h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.terms-item p {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+

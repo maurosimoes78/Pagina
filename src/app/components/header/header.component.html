@@ -1,0 +1,48 @@
+<header class="header">
+  <div class="header-container">
+    <div class="logo-container">
+      <a routerLink="/" class="logo-link">
+        <img src="/akani-logo.png" alt="Logo" class="logo" />
+      </a>
+    </div>
+    <div class="menu-container">
+      <button class="menu-button" (click)="toggleMenu()" aria-label="Menu" [attr.aria-expanded]="isMenuOpen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      
+      @if (isMenuOpen) {
+        <div class="menu-dropdown">
+          <div class="menu-section">
+            <h3 class="menu-section-title">Suporte</h3>
+            <ul class="menu-links">
+              @for (link of supportLinks; track link.url) {
+                <li>
+                  <a [routerLink]="link.url" (click)="closeMenu()" class="menu-link">{{ link.label }}</a>
+                </li>
+              }
+            </ul>
+          </div>
+          
+          <div class="menu-section">
+            <h3 class="menu-section-title">Área Institucional</h3>
+            <ul class="menu-links">
+              @for (link of institutionalLinks; track link.url) {
+                <li>
+                  <a [routerLink]="link.url" (click)="closeMenu()" class="menu-link">{{ link.label }}</a>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  
+  @if (isMenuOpen) {
+    <div class="menu-overlay" (click)="closeMenu()"></div>
+  }
+</header>

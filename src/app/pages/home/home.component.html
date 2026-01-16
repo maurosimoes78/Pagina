@@ -1,0 +1,45 @@
+<div class="home-container">
+  <div class="carousel-wrapper">
+    <div class="carousel-container">
+      <div class="carousel-track" [style.transform]="'translateX(-' + (currentIndex * 100) + '%)'">
+        @for (panel of panels; track panel.id) {
+          <div class="carousel-panel" [class.active]="currentIndex === panel.id" [class.clickable]="panel.title === 'Captura'" (click)="panel.title === 'Captura' ? navigateToPanel(panel.title) : null">
+            <div class="panel-content">
+              <div class="panel-image">
+                <img [src]="panel.image" [alt]="panel.title" />
+              </div>
+              <div class="panel-text">
+                <h2 class="panel-title">{{ panel.title }}</h2>
+                <p class="panel-description">{{ panel.description }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      
+      <!-- Botões de navegação -->
+      <button class="carousel-button prev" (click)="previousSlide()" aria-label="Painel anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="carousel-button next" (click)="nextSlide()" aria-label="Próximo painel">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+      
+      <!-- Indicadores -->
+      <div class="carousel-indicators">
+        @for (panel of panels; track panel.id) {
+          <button 
+            class="indicator" 
+            [class.active]="currentIndex === panel.id"
+            (click)="goToSlide(panel.id)"
+            [attr.aria-label]="'Ir para painel ' + panel.title"
+          ></button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

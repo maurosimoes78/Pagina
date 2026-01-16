@@ -1,0 +1,61 @@
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.content h1 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.mission-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.mission-item {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.mission-item h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.mission-item p {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.mission-item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mission-item li {
+  color: #666;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  line-height: 1.6;
+}
+
+.mission-item li:last-child {
+  border-bottom: none;
+}
+

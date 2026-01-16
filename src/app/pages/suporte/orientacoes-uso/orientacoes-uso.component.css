@@ -1,0 +1,51 @@
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.content h1 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.guide-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.guide-item {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.guide-item h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.guide-item p {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .guide-section {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,20 @@
+<div class="page-container">
+  <div class="content">
+    <h1>Captura</h1>
+    <p>Soluções avançadas de captura de conteúdo para broadcast</p>
+    
+    <section class="panels-section">
+      @for (panel of panels; track panel.id) {
+        <div class="panel-item">
+          <div class="panel-image">
+            <img [src]="panel.image" [alt]="panel.name" />
+          </div>
+          <div class="panel-content">
+            <h3 class="panel-name">{{ panel.name }}</h3>
+            <p class="panel-description">{{ panel.description }}</p>
+          </div>
+        </div>
+      }
+    </section>
+  </div>
+</div>

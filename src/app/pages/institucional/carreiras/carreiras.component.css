@@ -1,0 +1,127 @@
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.content h1 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.careers-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.careers-info {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.careers-info h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.careers-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.careers-info li {
+  color: #666;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  line-height: 1.6;
+}
+
+.careers-info li:last-child {
+  border-bottom: none;
+}
+
+.careers-info p {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.jobs-list {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.jobs-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.jobs-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.jobs-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.jobs-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.job-item {
+  display: block;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #ffffff;
+  border-radius: 6px;
+  border-left: 3px solid #007bff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.job-item:last-child {
+  margin-bottom: 0;
+}
+
+.job-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+}
+
+.job-item h4 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.job-item:hover h4 {
+  color: #007bff;
+}
+
+.job-item p {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+

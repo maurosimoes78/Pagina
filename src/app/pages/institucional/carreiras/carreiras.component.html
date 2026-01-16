@@ -1,0 +1,35 @@
+<div class="page-container">
+  <div class="content">
+    <h1>Trabalhe Conosco</h1>
+    <p>Faça parte do nosso time! Veja as oportunidades disponíveis.</p>
+    
+    <section class="careers-section">
+      <div class="careers-info">
+        <h3>Por que trabalhar conosco?</h3>
+        <ul>
+          <li>Ambiente de trabalho colaborativo</li>
+          <li>Oportunidades de crescimento</li>
+          <li>Benefícios competitivos</li>
+          <li>Desenvolvimento profissional</li>
+        </ul>
+      </div>
+      <div class="careers-info">
+        <h3>Vagas Disponíveis</h3>
+        <div class="jobs-list">
+          @for (vaga of vagas; track vaga.nome) {
+            <div (click)="abrirCandidatura(vaga.nome)" class="job-item">
+              <h4>{{ vaga.nome }}</h4>
+              <p>{{ vaga.descricao }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<app-candidatura 
+  [vagaNome]="vagaSelecionada"
+  [isOpen]="candidaturaAberta"
+  (close)="fecharCandidatura()">
+</app-candidatura>

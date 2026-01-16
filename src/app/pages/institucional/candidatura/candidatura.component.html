@@ -1,0 +1,112 @@
+@if (isOpen) {
+  <div class="dialog-overlay" (click)="onOverlayClick($event)">
+    <div class="dialog-container" [style.max-height]="maxDialogHeight" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Candidatura</h2>
+        <button class="close-button" (click)="closeDialog()" aria-label="Fechar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-content">
+        <p class="dialog-subtitle">Preencha o formulário abaixo para se candidatar à vaga: <strong>{{ vagaNome }}</strong></p>
+        
+        <form class="candidatura-form" (ngSubmit)="enviarCandidatura()">
+          <div class="form-group">
+            <label for="nome">Nome Completo <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="nome" 
+              name="nome" 
+              [(ngModel)]="formData.nome" 
+              required
+              class="form-input"
+              placeholder="Digite seu nome completo"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email <span class="required">*</span></label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              [(ngModel)]="formData.email" 
+              required
+              class="form-input"
+              placeholder="seu.email@exemplo.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="telefone">Telefone <span class="required">*</span></label>
+            <input 
+              type="tel" 
+              id="telefone" 
+              name="telefone" 
+              [(ngModel)]="formData.telefone" 
+              required
+              class="form-input"
+              placeholder="(00) 00000-0000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="cargo">Cargo de Interesse</label>
+            <input 
+              type="text" 
+              id="cargo" 
+              name="cargo" 
+              [(ngModel)]="formData.cargo" 
+              class="form-input"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="cv">Currículo (PDF, DOC, DOCX)</label>
+            <div class="file-upload">
+              <input 
+                type="file" 
+                id="cv" 
+                name="cv" 
+                (change)="onFileSelected($event)"
+                accept=".pdf,.doc,.docx"
+                class="file-input"
+              />
+              <label for="cv" class="file-label">
+                <span *ngIf="!cvFileName">Selecionar arquivo</span>
+                <span *ngIf="cvFileName" class="file-name">{{ cvFileName }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="mensagem">Mensagem Adicional</label>
+            <textarea 
+              id="mensagem" 
+              name="mensagem" 
+              [(ngModel)]="formData.mensagem" 
+              class="form-textarea"
+              rows="5"
+              placeholder="Adicione informações adicionais sobre sua experiência e qualificações..."
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="submit-button" [disabled]="isSubmitting">
+              @if (isSubmitting) {
+                <span>Enviando...</span>
+              } @else {
+                <span>Enviar Candidatura</span>
+              }
+            </button>
+            <button type="button" class="cancel-button" (click)="closeDialog()" [disabled]="isSubmitting">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

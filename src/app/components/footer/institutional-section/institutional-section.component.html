@@ -1,0 +1,10 @@
+<div class="institutional-section">
+  <h3 class="section-title">Área Institucional</h3>
+  <ul class="links-list">
+    @for (link of institutionalLinks; track link.url) {
+      <li>
+        <a [routerLink]="link.url" class="footer-link">{{ link.label }}</a>
+      </li>
+    }
+  </ul>
+</div>

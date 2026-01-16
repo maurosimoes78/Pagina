@@ -1,0 +1,10 @@
+<div class="support-section">
+  <h3 class="section-title">Suporte</h3>
+  <ul class="links-list">
+    @for (link of supportLinks; track link.url) {
+      <li>
+        <a [routerLink]="link.url" class="footer-link">{{ link.label }}</a>
+      </li>
+    }
+  </ul>
+</div>
