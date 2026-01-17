@@ -52,6 +52,7 @@ export class UsuariosComponent implements OnInit {
   constructor(private userService: UserManagementService) {}
 
   ngOnInit() {
+    this.userService.loadUsers();
     this.loadUsers();
     this.userService.users$.subscribe(users => {
       this.users = users;

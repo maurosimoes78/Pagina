@@ -302,6 +302,15 @@ class UserManager {
                 return $existing;
             }
 
+            // Verificar se é o usuário admin protegido
+            $user = $existing['user'];
+            if (isset($user['email']) && strtolower($user['email']) === 'admin@akani.com.br') {
+                return array(
+                    'success' => false,
+                    'message' => 'Não é permitido excluir o usuário administrador.'
+                );
+            }
+
             // Remover usuário (cascata remove sessões e atividades)
             $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
             $stmt->execute(array('id' => $id));

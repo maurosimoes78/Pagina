@@ -58,7 +58,7 @@ export class UserManagementService {
   /**
    * Carrega usuários da fonte de dados configurada
    */
-  private loadUsers(): void {
+  public loadUsers(): void {
     if (this.dataSource === 'localStorage') {
       this.loadUsersFromLocalStorage();
     } else {
@@ -376,6 +376,12 @@ export class UserManagementService {
    * Remove um usuário
    */
   removeUser(id: string): Observable<{ success: boolean; message: string }> {
+    // Verificar se é o usuário admin protegido
+    const userToDelete = this.getUserById(id);
+    if (userToDelete && userToDelete.email.toLowerCase() === 'admin@akani.com.br') {
+      return of({ success: false, message: 'Não é permitido excluir o usuário administrador.' });
+    }
+
     if (this.dataSource === 'localStorage') {
       const users = this.getUsers();
       const userIndex = users.findIndex(user => user.id === id);
@@ -394,6 +400,7 @@ export class UserManagementService {
       if (isNaN(userId)) {
         return of({ success: false, message: 'ID de usuário inválido.' });
       }
+
 
       return this.backendApi.deleteUser(userId).pipe(
         map(response => {
