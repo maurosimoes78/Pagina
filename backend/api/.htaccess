@@ -1,0 +1,26 @@
+# Configuração do Apache para a API
+# Redirecionar todas as requisições para router.php
+
+RewriteEngine On
+
+# Se não for um arquivo ou diretório existente, redirecionar para router.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ router.php [QSA,L]
+
+# Permitir acesso direto ao router.php
+<Files "router.php">
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# Configurações de segurança
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Desabilitar listagem de diretórios
+Options -Indexes
+
