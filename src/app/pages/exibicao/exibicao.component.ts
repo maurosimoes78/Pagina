@@ -20,10 +20,10 @@ export class ExibicaoComponent {
     },
     {
       id: 2,
-      name: 'Akani Automação',
+      name: 'Akani REKOVE',
       description: 'Solução completa de automação para operação de canais, agendamento inteligente e gerenciamento de programação',
-      image: '/assets/images/automacao.png',
-      route: '/exibicao/automacao'
+      image: '/assets/images/akani-rekove.png',
+      route: '/exibicao/rekove'
     }
   ];
 

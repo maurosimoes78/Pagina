@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     { 
       id: 1, 
       title: 'Exibição', 
-      description: 'Sistemas profissionais de TOVA e automação para transmissão',
+      description: 'Sistemas profissionais de exibição e automação para transmissão',
       image: '/assets/images/playout.png'
     },
     { 

@@ -59,6 +59,10 @@
   color: #007bff;
 }
 
+.welcome-mobile {
+  display: none; /* Oculto por padrão (desktop) */
+}
+
 .menu-container {
   display: flex;
   align-items: center;
@@ -200,7 +204,15 @@
   }
   
   .welcome-message {
-    display: none; /* Ocultar mensagem de boas-vindas em telas pequenas */
+    display: flex; /* Mostrar mensagem em mobile */
+  }
+
+  .welcome-full {
+    display: none; /* Ocultar mensagem completa em mobile */
+  }
+
+  .welcome-mobile {
+    display: inline; /* Mostrar apenas primeiro nome em mobile */
   }
   
   .logo {

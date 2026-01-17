@@ -7,7 +7,8 @@
     </div>
     @if (currentUser) {
       <div class="welcome-message">
-        <span>Olá {{ currentUser.name }}, seja bem vindo!</span>
+        <span class="welcome-full">Olá {{ currentUser.name }}, seja bem vindo!</span>
+        <span class="welcome-mobile">Olá {{ getFirstName() }}</span>
       </div>
     }
     <div class="menu-container">

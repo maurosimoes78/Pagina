@@ -72,6 +72,10 @@
     text-align: center;
   }
 
+  .copyright {
+    display: none; /* Oculta a linha de copyright em telas de celular */
+  }
+
   .social-icons {
     justify-content: center;
   }

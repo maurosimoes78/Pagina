@@ -22,7 +22,7 @@ export class GerenciamentoConteudoComponent {
       id: 2,
       name: 'Akani PYTA',
       description: 'Solução de arquivamento e preservação de conteúdo com acesso rápido e gerenciamento inteligente de storage',
-      image: '/assets/images/arquivo.png',
+      image: '/assets/images/akani-pyta.png',
       route: '/gerenciamento-conteudo/pyta'
     }
   ];

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AkaniAutomacaoComponent } from './akani-automacao.component';
+import { AkaniRekoveComponent } from './akani-rekove.component';
 
-describe('AkaniAutomacaoComponent', () => {
-  let component: AkaniAutomacaoComponent;
-  let fixture: ComponentFixture<AkaniAutomacaoComponent>;
+describe('AkaniRekoveComponent', () => {
+  let component: AkaniRekoveComponent;
+  let fixture: ComponentFixture<AkaniRekoveComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AkaniAutomacaoComponent]
+      imports: [AkaniRekoveComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AkaniAutomacaoComponent);
+    fixture = TestBed.createComponent(AkaniRekoveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -21,3 +21,4 @@ describe('AkaniAutomacaoComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

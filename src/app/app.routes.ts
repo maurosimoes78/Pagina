@@ -23,7 +23,7 @@ import { AkaniApykComponent } from './pages/captura/akani-apyk/akani-apyk.compon
 import { AkaniAyvuComponent } from './pages/captura/akani-ayvu/akani-ayvu.component';
 import { ExibicaoComponent } from './pages/exibicao/exibicao.component';
 import { AkaniTovaComponent } from './pages/exibicao/akani-playout/akani-playout.component';
-import { AkaniAutomacaoComponent } from './pages/exibicao/akani-automacao/akani-automacao.component';
+import { AkaniRekoveComponent } from './pages/exibicao/akani-rekove/akani-rekove.component';
 import { GerenciamentoConteudoComponent } from './pages/gerenciamento-conteudo/gerenciamento-conteudo.component';
 import { AkaniMohenduComponent } from './pages/gerenciamento-conteudo/akani-mam/akani-mam.component';
 import { AkaniPytaComponent } from './pages/gerenciamento-conteudo/akani-arquivo/akani-arquivo.component';
@@ -40,7 +40,7 @@ export const routes: Routes = [
   { path: 'captura/ayvu', component: AkaniAyvuComponent },
   { path: 'exibicao', component: ExibicaoComponent },
   { path: 'exibicao/tova', component: AkaniTovaComponent },
-  { path: 'exibicao/automacao', component: AkaniAutomacaoComponent },
+  { path: 'exibicao/rekove', component: AkaniRekoveComponent },
   { path: 'gerenciamento-conteudo', component: GerenciamentoConteudoComponent },
   { path: 'gerenciamento-conteudo/mohendu', component: AkaniMohenduComponent },
   { path: 'gerenciamento-conteudo/pyta', component: AkaniPytaComponent },

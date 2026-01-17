@@ -85,6 +85,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.currentUser?.role === 'admin';
   }
 
+  getFirstName(): string {
+    if (!this.currentUser?.name) {
+      return '';
+    }
+    // Extrai o primeiro nome (primeira palavra antes do espaço)
+    return this.currentUser.name.split(' ')[0];
+  }
+
   constructor(
     public authService: AuthService,
     private router: Router
