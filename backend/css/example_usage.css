@@ -305,6 +305,30 @@ h1 {
     box-sizing: border-box;
 }
 
+.form-group input[type="password"],
+.form-group input[type="text"] {
+    padding-right: 40px;
+}
+
+#toggle-password-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+    color: #666;
+    font-size: 0.9em;
+    z-index: 10;
+}
+
+#toggle-password-btn:hover {
+    color: #007bff;
+}
+}
+
 .form-group input:focus {
     outline: none;
     border-color: #007bff;

@@ -359,3 +359,23 @@ function sendTestEvent() {
     xhr.send(JSON.stringify(eventData));
 }
 
+/**
+ * Alterna a visibilidade da senha no campo de login
+ */
+function togglePasswordVisibility() {
+    var passwordInput = document.getElementById('login-password');
+    var toggleBtn = document.getElementById('toggle-password-btn');
+    
+    if (passwordInput && toggleBtn) {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+            toggleBtn.title = 'Ocultar senha';
+        } else {
+            passwordInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+            toggleBtn.title = 'Mostrar senha';
+        }
+    }
+}
+

@@ -21,10 +21,19 @@ class Auth {
      */
     public function login($email, $password) {
         try {
-            // Buscar usuário por email
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+            // Buscar usuário por email - buscar todos os campos explicitamente
+            $stmt = $this->db->prepare("
+                SELECT 
+                    id, email, password, name, role, 
+                    cpf, telefone, empresa, endereco, bairro, 
+                    cidade, estado, pais, telefone_comercial, cnpj,
+                    created_at, updated_at
+                FROM users 
+                WHERE email = :email
+            ");
             $stmt->execute(array('email' => $email));
-            $user = $stmt->fetch();
+            // Usar FETCH_ASSOC para garantir array associativo com todos os campos
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$user) {
                 return array(
@@ -67,13 +76,30 @@ class Auth {
             // Registrar atividade
             $this->registerActivity($user['id'], $sessionId);
 
-            // Remover senha da resposta
-            unset($user['password']);
+            // Criar array estruturado com todos os campos do usuário (sem senha)
+            $userData = array(
+                'id' => $user['id'],
+                'email' => $user['email'],
+                'name' => $user['name'],
+                'role' => $user['role'],
+                'cpf' => $user['cpf'],
+                'telefone' => $user['telefone'],
+                'empresa' => $user['empresa'],
+                'endereco' => $user['endereco'],
+                'bairro' => $user['bairro'],
+                'cidade' => $user['cidade'],
+                'estado' => $user['estado'],
+                'pais' => $user['pais'],
+                'telefone_comercial' => $user['telefone_comercial'],
+                'cnpj' => $user['cnpj'],
+                'created_at' => $user['created_at'],
+                'updated_at' => $user['updated_at']
+            );
 
             return array(
                 'success' => true,
                 'message' => 'Login realizado com sucesso',
-                'user' => $user,
+                'user' => $userData,
                 'token' => $token,
                 'sessionId' => $sessionId
             );

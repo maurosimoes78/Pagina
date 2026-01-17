@@ -164,15 +164,18 @@ function handleUsers($method, $segments, $input, $token) {
     // Verificar autenticação
     $auth = new Auth();
     $session = $auth->validateToken($token);
-    if (!$session) {
-        sendResponse(401, array('success' => false, 'message' => 'Não autenticado'));
-        return;
-    }
 
-    // Verificar se é admin para operações de escrita
-    if (in_array($method, array('POST', 'PUT', 'DELETE')) && $session['role'] !== 'admin') {
-        sendResponse(403, array('success' => false, 'message' => 'Acesso negado'));
-        return;
+    if (in_array($method, array('PUT', 'DELETE'))) {
+        if (!$session) {
+            sendResponse(401, array('success' => false, 'message' => 'Não autenticado'));
+            return;
+        }
+
+        // Verificar se é admin para operações de escrita
+        if ($session['role'] !== 'admin') {
+            sendResponse(403, array('success' => false, 'message' => 'Acesso negado'));
+            return;
+        }
     }
 
     $userManager = new UserManager();
@@ -196,6 +199,11 @@ function handleUsers($method, $segments, $input, $token) {
 
         case 'POST':
             // Criar usuário
+            if ($input['role'] === 'admin' && (!$session || $session['role'] !== 'admin')) {
+                sendResponse(403, array('success' => false, 'message' => 'Não é possivel criar um usuario com nivel administrativo não sendo um administrador'));
+                return;
+            }
+
             $result = $userManager->createUser($input);
             sendResponse($result['success'] ? 201 : 400, $result);
             break;

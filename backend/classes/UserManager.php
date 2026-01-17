@@ -184,10 +184,28 @@ class UserManager {
 
             $userId = $this->db->lastInsertId();
 
+            // Buscar o usuário recém-criado com todos os campos
+            $stmt = $this->db->prepare("
+                SELECT 
+                    id, email, password, name, role, 
+                    cpf, telefone, empresa, endereco, bairro, 
+                    cidade, estado, pais, telefone_comercial, cnpj,
+                    created_at, updated_at
+                FROM users 
+                WHERE id = :id
+            ");
+            $stmt->execute(array('id' => $userId));
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Remover senha da resposta por segurança
+            if ($user) {
+                unset($user['password']);
+            }
+
             return array(
                 'success' => true,
                 'message' => 'Usuário criado com sucesso',
-                'userId' => $userId
+                'user' => $user
             );
         } catch (Exception $e) {
             error_log("Create user error: " . $e->getMessage());
