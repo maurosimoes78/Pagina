@@ -132,7 +132,7 @@ export class UsuariosComponent implements OnInit {
       return;
     }
 
-    const result = this.userService.addUser({
+    this.userService.addUser({
       name: this.formData.name,
       email: this.formData.email,
       password: this.formData.password,
@@ -147,16 +147,21 @@ export class UsuariosComponent implements OnInit {
       pais: this.formData.pais,
       telefoneComercial: this.formData.telefoneComercial,
       cnpj: this.formData.cnpj
+    }).subscribe({
+      next: (result) => {
+        if (result.success) {
+          this.successMessage = result.message;
+          setTimeout(() => {
+            this.closeDialogs();
+          }, 1000);
+        } else {
+          this.errorMessage = result.message;
+        }
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Erro ao adicionar usuário.';
+      }
     });
-
-    if (result.success) {
-      this.successMessage = result.message;
-      setTimeout(() => {
-        this.closeDialogs();
-      }, 1000);
-    } else {
-      this.errorMessage = result.message;
-    }
   }
 
   updateUser() {
@@ -188,31 +193,41 @@ export class UsuariosComponent implements OnInit {
       updateData.password = this.formData.password;
     }
 
-    const result = this.userService.updateUser(this.selectedUser.id, updateData);
-
-    if (result.success) {
-      this.successMessage = result.message;
-      setTimeout(() => {
-        this.closeDialogs();
-      }, 1000);
-    } else {
-      this.errorMessage = result.message;
-    }
+    this.userService.updateUser(this.selectedUser.id, updateData).subscribe({
+      next: (result) => {
+        if (result.success) {
+          this.successMessage = result.message;
+          setTimeout(() => {
+            this.closeDialogs();
+          }, 1000);
+        } else {
+          this.errorMessage = result.message;
+        }
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Erro ao atualizar usuário.';
+      }
+    });
   }
 
   deleteUser() {
     if (!this.selectedUser) return;
 
-    const result = this.userService.removeUser(this.selectedUser.id);
-
-    if (result.success) {
-      this.successMessage = result.message;
-      setTimeout(() => {
-        this.closeDialogs();
-      }, 1000);
-    } else {
-      this.errorMessage = result.message;
-    }
+    this.userService.removeUser(this.selectedUser.id).subscribe({
+      next: (result) => {
+        if (result.success) {
+          this.successMessage = result.message;
+          setTimeout(() => {
+            this.closeDialogs();
+          }, 1000);
+        } else {
+          this.errorMessage = result.message;
+        }
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Erro ao remover usuário.';
+      }
+    });
   }
 
   onOverlayClick(event: MouseEvent) {

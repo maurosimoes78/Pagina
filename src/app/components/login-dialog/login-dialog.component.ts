@@ -107,48 +107,49 @@ export class LoginDialogComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    try {
-      // Criar o usuário
-      const result = this.userManagementService.addUser({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        role: 'user',
-        cpf: this.cpf,
-        telefone: this.telefone,
-        empresa: this.empresa,
-        endereco: this.endereco,
-        bairro: this.bairro,
-        cidade: this.cidade,
-        estado: this.estado,
-        pais: this.pais,
-        telefoneComercial: this.telefoneComercial,
-        cnpj: this.cnpj
-      });
-
-      if (result.success) {
-        // Após criar, fazer login automaticamente
-        const loginResult = await this.authService.login(this.email, this.password);
-        
-        if (loginResult.success) {
-          this.successMessage = 'Conta criada e login realizado com sucesso!';
-          setTimeout(() => {
-            this.loginSuccess.emit();
-            this.closeDialog();
-          }, 1000);
+    // Criar o usuário
+    this.userManagementService.addUser({
+      name: this.name,
+      email: this.email,
+      password: this.password,
+      role: 'user',
+      cpf: this.cpf,
+      telefone: this.telefone,
+      empresa: this.empresa,
+      endereco: this.endereco,
+      bairro: this.bairro,
+      cidade: this.cidade,
+      estado: this.estado,
+      pais: this.pais,
+      telefoneComercial: this.telefoneComercial,
+      cnpj: this.cnpj
+    }).subscribe({
+      next: async (result) => {
+        if (result.success) {
+          // Após criar, fazer login automaticamente
+          const loginResult = await this.authService.login(this.email, this.password);
+          
+          if (loginResult.success) {
+            this.successMessage = 'Conta criada e login realizado com sucesso!';
+            setTimeout(() => {
+              this.loginSuccess.emit();
+              this.closeDialog();
+            }, 1000);
+          } else {
+            this.errorMessage = 'Conta criada, mas houve um erro ao fazer login. Tente fazer login novamente.';
+            this.showSignupForm = false;
+          }
         } else {
-          this.errorMessage = 'Conta criada, mas houve um erro ao fazer login. Tente fazer login novamente.';
-          this.showSignupForm = false;
+          this.errorMessage = result.message;
         }
-      } else {
-        this.errorMessage = result.message;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao criar conta:', error);
+        this.errorMessage = 'Erro ao criar conta. Tente novamente.';
+        this.isLoading = false;
       }
-    } catch (error) {
-      console.error('Erro ao criar conta:', error);
-      this.errorMessage = 'Erro ao criar conta. Tente novamente.';
-    } finally {
-      this.isLoading = false;
-    }
+    });
   }
 
   goBackToLogin() {

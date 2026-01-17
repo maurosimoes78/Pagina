@@ -1,11 +1,25 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { UserManagementService } from './user-management.service';
+import { BackendApiService } from './backend-api.service';
 
 export interface User {
+  id: string;
   email: string;
   name: string;
   role?: string;
+  cpf?: string;
+  telefone?: string;
+  empresa?: string;
+  endereco?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
+  pais?: string;
+  telefoneComercial?: string;
+  cnpj?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   tokenId: string;
   loginTime: Date;
 }
@@ -20,7 +34,10 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  constructor(private userManagementService: UserManagementService) {
+  constructor(
+    private userManagementService: UserManagementService,
+    private backendApi: BackendApiService
+  ) {
     // Verificar se há um usuário salvo no localStorage ao inicializar
     this.loadUserFromStorage();
   }
@@ -28,11 +45,21 @@ export class AuthService {
   /**
    * Verifica se um email existe na lista de usuários
    * @param email Email a ser verificado
-   * @returns true se o email existir, false caso contrário
+   * @returns Promise<boolean> true se o email existir, false caso contrário
    */
-  checkEmailExists(email: string): boolean {
-    const user = this.userManagementService.getUserByEmail(email);
-    return !!user;
+  async checkEmailExists(email: string): Promise<boolean> {
+    const dataSource = this.userManagementService.getDataSource();
+    
+    if (dataSource === 'localStorage') {
+      // Verificar no localStorage
+      const user = this.userManagementService.getUserByEmail(email);
+      return !!user;
+    } else {
+      // Para backend, tentar fazer login (o backend retornará se o email existe)
+      // Por enquanto, retornamos true se houver token (usuário autenticado)
+      // ou podemos fazer uma verificação específica se necessário
+      return this.backendApi.isAuthenticated();
+    }
   }
 
   /**
@@ -54,47 +81,167 @@ export class AuthService {
         return { success: false, message: 'Por favor, insira um email válido.' };
       }
 
-      // Verificar se o usuário existe
-      const userData = this.userManagementService.getUserByEmail(email);
-      const emailExists = !!userData;
+      // Verificar a fonte de dados
+      const dataSource = this.userManagementService.getDataSource();
 
-      // Se o email não existir, retornar informação para cadastro
-      if (!emailExists) {
-        return {
-          success: false,
-          message: 'Email não cadastrado. Você será redirecionado para criar uma conta.',
-          emailExists: false
+      if (dataSource === 'localStorage') {
+        // Comportamento original: verificar no localStorage
+        const userData = this.userManagementService.getUserByEmail(email);
+        const emailExists = !!userData;
+
+        // Se o email não existir, retornar informação para cadastro
+        if (!emailExists) {
+          return {
+            success: false,
+            message: 'Email não cadastrado. Você será redirecionado para criar uma conta.',
+            emailExists: false
+          };
+        }
+
+        // Verificar se a senha está correta
+        if (userData.password !== password) {
+          return { success: false, message: 'Senha incorreta. Tente novamente.', emailExists: true };
+        }
+
+        // Login bem-sucedido
+        const tokenId = this.generateTokenId();
+        const user: User = {
+          id: userData.id,
+          email: email,
+          name: userData.name,
+          role: userData.role || 'user',
+          cpf: userData.cpf,
+          telefone: userData.telefone,
+          empresa: userData.empresa,
+          endereco: userData.endereco,
+          bairro: userData.bairro,
+          cidade: userData.cidade,
+          estado: userData.estado,
+          pais: userData.pais,
+          telefoneComercial: userData.telefoneComercial,
+          cnpj: userData.cnpj,
+          createdAt: userData.createdAt,
+          updatedAt: userData.updatedAt,
+          tokenId: tokenId,
+          loginTime: new Date()
         };
+
+        // Salvar no localStorage
+        localStorage.setItem(this.TOKEN_KEY, tokenId);
+        localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+
+        // Atualizar o BehaviorSubject
+        this.currentUserSubject.next(user);
+
+        return {
+          success: true,
+          message: 'Login realizado com sucesso!',
+          user: user,
+          emailExists: true
+        };
+      } else {
+        // Comportamento para backend: fazer login via API
+        try {
+          const loginResponse = await firstValueFrom(
+            this.backendApi.login({ email, password })
+          );
+
+          if (loginResponse.success && loginResponse.token) {
+            // Login bem-sucedido no backend
+            // Obter dados do usuário do backend
+            let backendUser: any = null;
+            if (loginResponse.user) {
+              backendUser = loginResponse.user;
+            } else {
+              // Se não vier no response, buscar do backend
+              // Por enquanto, usar os dados básicos
+              backendUser = { email, name: email.split('@')[0], role: 'user' };
+            }
+
+            // Criar objeto User para o frontend
+            const user: User = {
+              id: String(backendUser.id || ''),
+              email: backendUser.email || email,
+              name: backendUser.name || backendUser.email?.split('@')[0] || email.split('@')[0],
+              role: backendUser.role || 'user',
+              cpf: backendUser.cpf,
+              telefone: backendUser.telefone,
+              empresa: backendUser.empresa,
+              endereco: backendUser.endereco,
+              bairro: backendUser.bairro,
+              cidade: backendUser.cidade,
+              estado: backendUser.estado,
+              pais: backendUser.pais,
+              telefoneComercial: backendUser.telefone_comercial || backendUser.telefoneComercial,
+              cnpj: backendUser.cnpj,
+              createdAt: backendUser.created_at ? new Date(backendUser.created_at) : new Date(),
+              updatedAt: backendUser.updated_at ? new Date(backendUser.updated_at) : new Date(),
+              tokenId: loginResponse.token, // Usar o token do backend
+              loginTime: new Date()
+            };
+
+            // Salvar no localStorage
+            localStorage.setItem(this.TOKEN_KEY, loginResponse.token);
+            localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+
+            // Atualizar o BehaviorSubject
+            this.currentUserSubject.next(user);
+
+            // Sincronizar dados do usuário com o UserManagementService (localStorage)
+            // Converter e salvar no formato UserData
+            const userData = {
+              id: String(backendUser.id || Date.now()),
+              email: user.email,
+              password: '', // Senha não é armazenada
+              name: user.name,
+              role: user.role,
+              cpf: backendUser.cpf,
+              telefone: backendUser.telefone,
+              empresa: backendUser.empresa,
+              endereco: backendUser.endereco,
+              bairro: backendUser.bairro,
+              cidade: backendUser.cidade,
+              estado: backendUser.estado,
+              pais: backendUser.pais,
+              telefoneComercial: backendUser.telefoneComercial,
+              cnpj: backendUser.cnpj,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            };
+
+            // Verificar se o usuário já existe no localStorage
+            const existingUser = this.userManagementService.getUserByEmail(user.email);
+            if (!existingUser) {
+              // Adicionar ao localStorage (usando método síncrono para localStorage)
+              const users = this.userManagementService.getUsers();
+              users.push(userData);
+              // Salvar diretamente no localStorage
+              localStorage.setItem('akani_users', JSON.stringify(users));
+            }
+
+            return {
+              success: true,
+              message: 'Login realizado com sucesso!',
+              user: user,
+              emailExists: true
+            };
+          } else {
+            // Login falhou no backend
+            return {
+              success: false,
+              message: loginResponse.message || 'Email ou senha incorretos.',
+              emailExists: undefined
+            };
+          }
+        } catch (error: any) {
+          console.error('Erro ao fazer login no backend:', error);
+          return {
+            success: false,
+            message: error.message || 'Erro ao conectar com o servidor. Tente novamente.',
+            emailExists: false
+          };
+        }
       }
-
-      // Verificar se a senha está correta
-      if (userData.password !== password) {
-        return { success: false, message: 'Senha incorreta. Tente novamente.', emailExists: true };
-      }
-
-      // Login bem-sucedido
-      const tokenId = this.generateTokenId();
-      const user: User = {
-        email: email,
-        name: userData.name,
-        role: userData.role || 'user',
-        tokenId: tokenId,
-        loginTime: new Date()
-      };
-
-      // Salvar no localStorage
-      localStorage.setItem(this.TOKEN_KEY, tokenId);
-      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-
-      // Atualizar o BehaviorSubject
-      this.currentUserSubject.next(user);
-
-      return {
-        success: true,
-        message: 'Login realizado com sucesso!',
-        user: user,
-        emailExists: true
-      };
     } catch (error) {
       console.error('Erro ao realizar login:', error);
       return {
@@ -108,7 +255,24 @@ export class AuthService {
   /**
    * Realiza o logout do usuário
    */
-  logout(): void {
+  async logout(): Promise<void> {
+    const dataSource = this.userManagementService.getDataSource();
+    
+    // Se estiver usando backend, fazer logout no backend também
+    if (dataSource === 'backend') {
+      try {
+        const token = this.getToken();
+        if (token) {
+          // Fazer logout no backend
+          await firstValueFrom(this.backendApi.logout());
+        }
+      } catch (error) {
+        console.error('Erro ao fazer logout no backend:', error);
+        // Continuar com logout local mesmo se falhar no backend
+      }
+    }
+    
+    // Limpar localStorage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
